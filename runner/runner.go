@@ -346,9 +346,9 @@ func Flag(name string, value interface{}) CommandLineOption {
 func Path(path string) CommandLineOption {
 	return func(m map[string]interface{}) error {
 		m["exec-path"] = path
-		m["no-first-run"] = true
-		m["no-default-browser-check"] = true
-		m["remote-debugging-port"] = 9222
+		// m["no-first-run"] = true
+		// m["no-default-browser-check"] = true
+		// m["remote-debugging-port"] = 9222
 		return nil
 	}
 }
