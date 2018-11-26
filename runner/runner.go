@@ -297,6 +297,14 @@ func (r *Runner) Port() int {
 	return p
 }
 
+func (r *Runner) ChromePID() int {
+	if r.cmd != nil && r.cmd.Process != nil {
+		return r.cmd.Process.Pid
+	}
+
+	return 0
+}
+
 // Client returns a Chrome DevTools Protocol client for the running Chrome
 // process.
 func (r *Runner) Client(opts ...client.Option) *client.Client {

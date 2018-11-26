@@ -339,6 +339,10 @@ func (c *CDP) Run(ctxt context.Context, a Action) error {
 	return a.Do(ctxt, cur)
 }
 
+func (c *CDP) ChromePID() int {
+	return c.r.ChromePID()
+}
+
 // Option is a Chrome DevTools Protocol option.
 type Option func(*CDP) error
 
