@@ -157,10 +157,16 @@ func (h *TargetHandler) run(ctxt context.Context) {
 
 				switch {
 				case msg.Method != "":
-					h.qevents <- msg
+					select {
+					case h.qevents <- msg:
+					case <-ctxt.Done():
+					}
 
 				case msg.ID != 0:
-					h.qres <- msg
+					select {
+					case h.qres <- msg:
+					case <-ctxt.Done():
+					}
 
 				default:
 					h.errf("ignoring malformed incoming message (missing id or method): %#v", msg)
@@ -239,7 +245,10 @@ func (h *TargetHandler) processEvent(ctxt context.Context, msg *cdproto.Message)
 	case *inspector.EventDetached:
 		h.Lock()
 		defer h.Unlock()
-		h.detached <- e
+		select {
+		case h.detached <- e:
+		case <-ctxt.Done():
+		}
 		return nil
 
 	case *dom.EventDocumentUpdated:
@@ -264,7 +273,10 @@ func (h *TargetHandler) processEvent(ctxt context.Context, msg *cdproto.Message)
 
 	case "Network":
 		if h.netevents != nil {
-			h.netevents <- ev
+			select {
+			case h.netevents <- ev:
+			case <-ctxt.Done():
+			}
 		}
 	}
 
