@@ -124,7 +124,10 @@ func (s *Selector) run(ctxt context.Context, h *TargetHandler) chan error {
 				continue
 
 			case <-ctxt.Done():
-				ch <- ctxt.Err()
+				select {
+				case ch <- ctxt.Err():
+				default:
+				}
 				return
 			}
 		}
