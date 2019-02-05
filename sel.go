@@ -90,7 +90,10 @@ func (s *Selector) run(ctxt context.Context, h *TargetHandler) chan error {
 			if err != nil {
 				select {
 				case <-ctxt.Done():
-					ch <- ctxt.Err()
+					select {
+					case ch <- ctxt.Err():
+					default:
+					}
 					return
 				default:
 					continue
